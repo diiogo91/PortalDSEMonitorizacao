@@ -108,6 +108,7 @@ namespace PortalDSEMonitorizacao.Controllers
                     //create the command to run
                     var cmd = new Command(path, true);
                     pipeline.Commands.Add(cmd);
+
  
                     //execute the script
                     try
