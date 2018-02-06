@@ -1,0 +1,130 @@
+﻿@using System
+@using System.Activities.Expressions
+@using System.IO
+
+@{
+    ViewBag.Title = "Gestão de Contactos Balcões";
+
+}
+@Html.Raw(TempData["msg"])
+<script type="text/javascript">
+    //window.location.hash ="/Home/balcoes";
+    window.history.replaceState(null, "Title", "/home/balcoes");
+</script>
+
+<h2 align="center">Gestão de Contactos: Comunicações com os Balcões</h2>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Gestão de Contactos - Comunicações com os Balcões</title>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+</head>
+<body onload="maketableScroll2();">
+    <form method="POST">
+        <div class="scrollingTable">
+
+
+            <br /><br />
+            <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+
+                <tr style="background-color:#D1005D">
+                    <th class="text-center">Acção</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Equipa</th>
+                    <th class="text-center">Telefone</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Notf_Email</th>
+                    <th class="text-center">Notf_SMS</th>
+                </tr>
+                @model PortalDSEMonitorizacao.Models.ContactsBalcaoListViewModel
+                @if (Model != null)
+                {
+                    foreach (var dataItem in Model.Contactbalcao)
+                    {
+                        <tr class="trcont">
+                            <td id=@dataItem.Id align="center">
+                                <a href="#" class="btn btn-link btnEditar" data-value="@dataItem.Id">Editar</a> |
+                                <input type="submit" id="remover_@dataItem.Id" class="btn btn-link"
+                                       value="Remover" formaction="/home/Remove/@dataItem.Id" data-value="@dataItem.Id" />
+                            </td>
+                            <td align="center">
+                                @dataItem.Nome
+                            </td>
+                            <td align="center">
+                                @dataItem.Equipa
+                            </td>
+                            <td align="center">
+                                @dataItem.Telefone
+                            </td>
+                            <td align="center">
+                                @dataItem.Email
+                            </td>
+                            <td align="center">
+                                @dataItem.Notf_Email
+                            </td>
+                            <td align="center">
+                                @dataItem.Notf_SMS
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div id="teste"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @section Scripts{
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $.ajaxSetup({ cache: false });
+                        $(".btnEditar").click(function () {
+                            var id = $(this).data("value");
+                            $("#teste").load("/Home/EditBalcoes/" + id,
+                                function () {
+                                    $('#myModal').modal("show");
+                                });
+                        });
+                    });
+                </script>
+            }
+        </div>
+
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt" Style="color:#ff2c50">Alterações Gravadas com Sucesso...</p>
+            </div>
+        </div>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt2" Style="color:#ff2c50" hidden></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.getElementById("hidenatt").style.display = "none";
+        </script>
+
+        <div class="row" Style="margin-top: 1cm;">
+            <div class="col-md-1">
+                <input type="submit" id="btngravar" class="btn btn-success"
+                       value="Gravar Alterações" formaction="/home/SalvarAlteracoesBalcoes" />
+            </div>
+        </div>
+
+        @Html.Raw(TempData["showmsg"])
+
+    </form>
+
+</body>
+
+</html>
