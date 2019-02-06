@@ -1,0 +1,93 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Add Contacto Milleteller";
+}
+
+@model PortalDSEMonitorizacao.Models.ContactsListViewModel
+
+@using (Html.BeginForm("AddContactoMilleteller2", "Home", FormMethod.Post))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">Associar Contacto a Notificações Milleteller</p>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("lblName", "(*) Contacto:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownList("frmContactos", new SelectList(Model.Contactos, "Id", "Nome"), htmlAttributes: new { @class = "form-control", @id = "Region" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblName", "Notf_SMS:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                        List<SelectListItem> listItems1 = new List<SelectListItem>();
+                        listItems1.Add(new SelectListItem
+                        {
+                            Text = "Sim",
+                            Value = "Sim",
+                            Selected = true
+                        });
+                        listItems1.Add(new SelectListItem
+                        {
+                            Text = "Nao",
+                            Value = "Nao"
+                        });
+                    }
+                    @Html.DropDownList("drpListNotfSMS", listItems1, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblEmail", "Notf_Email:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                        List<SelectListItem> listItems2 = new List<SelectListItem>();
+                        listItems2.Add(new SelectListItem
+                        {
+                            Text = "Sim",
+                            Value = "Sim",
+                            Selected = true
+                        });
+                        listItems2.Add(new SelectListItem
+                        {
+                            Text = "Nao",
+                            Value = "Nao"
+                        });
+                    }
+                    @Html.DropDownList("drpListNotfEmail", listItems2, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblFim", "Fim_Noft_Email:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                        List<SelectListItem> listItems3 = new List<SelectListItem>();
+                        listItems3.Add(new SelectListItem
+                        {
+                            Text = "to",
+                            Value = "to"
+                        });
+                        listItems3.Add(new SelectListItem
+                        {
+                            Text = "cc",
+                            Value = "cc",
+                            Selected = true
+                        });
+                    }
+                    @Html.DropDownList("drpListFim", listItems3, new { @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" value="Associar Contacto" class="btn btn-danger" formaction="/home/AddContactoMilleteller2/" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}

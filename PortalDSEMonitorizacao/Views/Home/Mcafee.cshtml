@@ -1,0 +1,239 @@
+﻿
+@{
+    ViewBag.Title = "Estatisticas Mcafee";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/Mcafee");
+</script>
+@model PortalDSEMonitorizacao.Models.EstatisticaMcafeeViewModel
+
+
+<h2>Processar Estatística Mcafee</h2>
+<html>
+<head>
+    <title>Processamento de Informação Estatistica Mcafee </title>
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.theme.min.css" />
+    <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+</head>
+
+<body>
+
+    @using (Html.BeginForm("Mcafee2", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table>
+            <tr>
+                <td>Especificar Mês e Ano:</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Mês:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker1'>
+                        @Html.TextBox("dataInicio", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="Submit" value="Processar Estatísica" class="btn btn-success" onclick="callProgress()" formaction="/home/Mcafee2" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Output:
+                </td>
+            </tr>
+        </table>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Estatistica. Por Favor, Contacte o Administrador da Página. </p>
+            </div>
+        </div>
+    }
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" id="hidenbtn" value="Exportar para XLS" class="btn btn-primary" onclick="tableToExcel('editable','Estatisticas Mcafee (abaixo do SLA)','EstatisticaMcafee.xls')" disabled />
+            </td>
+        </tr>
+    </table>
+    <table id="editable">
+        @if (Model.periodoEspecificado != null)
+        {
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td><b> Data Especificada: @Model.periodoEspecificado</b> </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+        }
+
+        <tr>
+            <td>
+                @if (@Model.servicosCentrais != null)
+                {
+                    <table>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b> Mcafee Serviços Centrais</b> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+                        <tr style="background-color:#D1005D">
+                            <th class="text-center">Nome Servidor</th>
+                            <th class="text-center">Dias Desactualizado</th>
+                            <th class="text-center">Índice Desactualização</th>
+                            <th class="text-center">Índice Actualização</th>
+                        </tr>
+                        @foreach (var dataItem in Model.servicosCentrais)
+                        {
+                            <tr>
+                                <td class="text-center">@dataItem.Name</td>
+                                <td class="text-center">@dataItem.diasDesactualizado</td>
+                                <td class="text-center">@dataItem.indice.Replace(".",",") %</td>
+                                <td class="text-center">@dataItem.percentagem.Replace(".", ",") %</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @if (@Model.balcoes != null)
+                {
+                    <table>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b> Mcafee Balções</b> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+                        <tr style="background-color:#D1005D">
+                            <th class="text-center">Nome Balção</th>
+                            <th class="text-center">Nome Servidor</th>
+                            <th class="text-center">Dias Desactualizado</th>
+                            <th class="text-center">Índice Desactualização</th>
+                            <th class="text-center">Índice Actualização</th>
+                        </tr>
+                        @foreach (var dataItem in Model.balcoes)
+                        {
+                            <tr>
+                                <td class="text-center">@dataItem.nomeBalcao</td>
+                                <td class="text-center">@dataItem.Name</td>
+                                <td class="text-center">@dataItem.diasDesactualizado</td>
+                                <td class="text-center">@dataItem.indice.Replace(".", ",") %</td>
+                                <td class="text-center">@dataItem.percentagem.Replace(".", ",") %</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </td>
+        </tr>
+    </table>
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+    @Html.Raw(TempData["showmsg"])
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dataInicio').datetimepicker({
+                viewMode: 'years',
+                format: 'MM/YYYY'
+            });
+
+            $('#dataInicio').on('dp.hide', function (event) {
+                setTimeout(function () {
+                    $('#dataInicio').data('DateTimePicker').viewMode('years');
+                }, 1);
+            });
+        });
+        function callProgress() {
+            $("#divLoading").show();
+        };
+    </script>
+    @section scripts{
+    <script>
+        var tableToExcel = (function () {
+            var uri = 'data:application/vnd.ms-excel;base64,'
+                , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><?xml version="1.0" encoding="UTF-8" standalone="yes"?><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            return function (table, name, fileName) {
+                if (!table.nodeType) table = document.getElementById(table)
+                var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+
+                var link = document.createElement("A");
+                link.href = uri + base64(format(template, ctx));
+                link.download = fileName || 'Workbook.xls';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        })();
+    </script>
+    }
+    @Html.Raw(TempData["showmsg"])
+</body>
+</html>
+

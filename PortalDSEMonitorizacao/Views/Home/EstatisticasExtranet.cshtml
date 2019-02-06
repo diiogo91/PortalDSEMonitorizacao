@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "Estatisticas Extranets";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/EstatisticasExtranet");
+</script>
+
+<h2>Processar Estatística Comunicações Extranets</h2>
+<html>
+<head>
+    <title>Processamento de Informação Estatistica Comunicações Extranets</title>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.theme.min.css" />
+</head>
+@model PortalDSEMonitorizacao.Models.EstatisticaExtranetListViewModel
+<body>
+    <table>
+        <tr>
+            <td><b> NB:</b> O processamendo desta Estatística poderá levar mais de 10 minutos dependendo do número de Extranets e do período especificado!</td>
+        </tr>
+    </table>
+    @using (Html.BeginForm("EstatisticasExtranet2", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <table>
+            <tr>
+                <td>Especificar datas:</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Inicio:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.TextBox("dataInicio", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Fim:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.TextBox("dataFim", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Especificar SLA:</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("SLA:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    @Html.TextBox("sladefinido", "97", new { @class = "form-control" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="Submit" value="Processar Estatísica" class="btn btn-success" onclick="callProgress()" formaction="/home/EstatisticasExtranet2" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Output:
+                </td>
+            </tr>
+        </table>
+    }
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" id="hidenbtn" value="Exportar para XLS" class="btn btn-primary" onclick="tableToExcel('editable','Estatistica de Comunicações Extranet','EstatisticaExtranet.xls')" disabled />
+            </td>
+        </tr>
+    </table>
+    <table id="editable">
+        <tr>
+            <td><b> Os dados Estatísticos processados são relativos ao período especificado</b> </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        @{
+            if (Model.sladefinido != null && Model.periodoEspecificado != null)
+            {
+                <tr>
+                    <td>
+                        Período dos dados : <b>@Model.periodoEspecificado</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                if (Model.numeroExtranets != null)
+                {
+                    <tr>
+                        <td>
+                            Número de Extranets : <b>@Model.numeroExtranets</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                }
+                if (Model.disponibilidadeGeral != null)
+                {
+                    <tr>
+                        <td>
+                            Disponibilidade Geral das Extranets: <b>@Model.disponibilidadeGeral</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td>
+                        Disponibilidade das Extranets:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+                            @if (Model.EstatisticasExtranet != null)
+                            {
+                                <tr style="background-color:#D1005D">
+                                    <th class="text-center">Nome</th>
+                                    <th class="text-center">Sensor</th>
+                                    <th class="text-center">Disponibilidade</th>
+                                    <th class="text-center">Indisponibilidade</th>
+                                </tr>
+                                foreach (var dataItem in Model.EstatisticasExtranet)
+                                {
+                                    <tr class="trcont">
+                                        <td align="center">
+                                            @dataItem.Nome
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.Sensor
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.Disponibilidade
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.Indisponibilidade
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </table>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+
+        }
+    </table>
+
+    <div class="row" Style="margin-top: 1%;">
+        <div class="col-md-8">
+            <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Estatistica. Por Favor, Contacte o Administrador da Página. </p>
+        </div>
+    </div>
+
+
+
+
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+    @Html.Raw(TempData["showmsg"])
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#dataInicio").datepicker({
+                dateFormat: 'yy-mm-dd',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior'
+            });
+            $("#dataFim").datepicker({
+                dateFormat: 'yy-mm-dd',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior'
+            });
+
+        });
+
+        function callProgress() {
+            $("#divLoading").show();
+        };
+    </script>
+    @section scripts{
+        <script>
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><?xml version="1.0" encoding="UTF-8" standalone="yes"?><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name, fileName) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+
+                    var link = document.createElement("A");
+                    link.href = uri + base64(format(template, ctx));
+                    link.download = fileName || 'Workbook.xls';
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            })();
+        </script>
+    }
+    @Html.Raw(TempData["showmsg"])
+</body>
+</html>
+

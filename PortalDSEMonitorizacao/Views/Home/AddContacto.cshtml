@@ -1,0 +1,65 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Add Contacto ";
+}
+
+@model PortalDSEMonitorizacao.Models.AddContactoListViewModel
+
+@using (Html.BeginForm("AddContacto2", "Home", FormMethod.Post))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">Adicionar Novo Contacto</p>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("lblName", "(*) Nome:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmNome", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblEquipa", "Equipa:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownList("drpListaEquipa", new SelectList(Model.equipas, "Id", "Nome"), "Especificar a Equipa", htmlAttributes: new { @class = "form-control", data_placeholder = "Especificar a Equipa", @id = "Region" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblassocial", "Associar aos Templates da Equipa:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    <div class="radio-inline">
+                        <label class="active">
+                            @Html.RadioButtonFor(model => model.associar, "Sim", new { @checked = "checked" })
+                            @Html.Label("Sim", "Sim")
+                        </label>
+                    </div>
+                    <div class="radio-inline">
+                        <label class="">
+                            @Html.RadioButtonFor(model => model.associar, "Não", false)
+                            @Html.Label("Não", "Não")
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblTelefone", "Telefone:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmTelefone", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblEmail", "Email:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmEmail", "", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" value="Adicionar Contacto" class="btn btn-danger" formaction="/home/AddContacto2/" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+}

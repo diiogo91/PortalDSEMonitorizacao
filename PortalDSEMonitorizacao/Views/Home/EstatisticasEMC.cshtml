@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Estatisticas EMC";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/EstatisticasEMC");
+</script>
+
+<h2>Processar Ficheiro de Estatísticas Storage EMC</h2>
+<html>
+<head>
+    <title>Processamento de Informação Estatistica Storage EMC</title>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+</head>
+
+<body>
+    @using (Html.BeginForm("EstatisticasEMC2", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table>
+            <tr>
+                <td>Carregar Ficheiro de Estatisticas Strorage EMC:</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="file" name="UploadedFile" />
+                </td>
+            </tr>
+            <tr>
+                <td><b>NB:</b> O ficheiro a processar deve estar no formato <b>csv</b></td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Output:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+
+
+                        @model PortalDSEMonitorizacao.Models.EstatisticaEMCListViewModel
+                        @if (Model.EstatisticasEMC != null)
+                         {
+                    <tr style="background-color:#D1005D">
+                        <th class="text-center">Camada</th>
+                        <th class="text-center">Total (TB)</th>
+                        <th class="text-center">Livre (TB)</th>
+                        <th class="text-center">Usado (%)</th>
+                        </tr>
+                            foreach (var dataItem in Model.EstatisticasEMC)
+                            {
+                            <tr class="trcont">
+                                <td align="center">
+                                    @dataItem.Name
+                                </td>
+                                <td align="center">
+                                    @dataItem.TotalCapacityTB
+                                </td>
+                                <td align="center">
+                                    @dataItem.FreeCapacityTB
+                                </td>
+                                <td align="center">
+                                    @dataItem.Used
+                                </td>
+                            </tr>
+                            }
+                            }
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="Submit" value="Processar Estatísica" class="btn btn-success" />
+                </td>
+            </tr>
+        </table>
+    }
+
+    <div class="row" Style="margin-top: 1%;">
+        <div class="col-md-8">
+            <p id="hidenatt2" Style="color:#ff2c50" hidden>Formato do ficheiro submetido invalido.. Certifque de que é o ficheiro de Estatísticas Storage EMC correcto e que esteja no formato csv.</p>
+        </div>
+    </div>
+    <div class="row" Style="margin-top: 1%;">
+        <div class="col-md-8">
+            <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento do ficheiro. Por Favor, Contacte o Administrador da Página. </p>
+        </div>
+    </div>
+    @Html.Raw(TempData["showmsg"])
+</body>
+</html>

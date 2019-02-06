@@ -1,0 +1,62 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Add Link";
+}
+@model PortalDSEMonitorizacao.Models.AddLinkListViewModel
+
+@using (Html.BeginForm("AddLink2", "Home", FormMethod.Post))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">Adicionar Novo Link</p>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("lblName", "(*) Endereço:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmendereco", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblC", "Credenciais:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.ListBoxFor(model => model.SelectedOptions, new MultiSelectList(Model.credenciais, "Id", "User"), new { @class = "chosen-select", data_placeholder = "Especifica a credencial", style = "display: block;width: 100 %;height: 100%;padding: 6px 12px;font - size: 14px;line - height: 1.42857143;color: #555;background - color: #fff;background - image: none;border: 1px solid #ccc;border - radius: 4px;" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("blbPass", "Descrição:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextArea("frmDescricao", htmlAttributes: new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("blbPass", "Sondas:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.ListBoxFor(model => model.SelectedOptions2, new MultiSelectList(Model.sondas, "Id", "Dns"), new { @class = "chosen-select", data_placeholder = "Especifica a sonda", style = "display: block;width: 100 %;height: 100%;padding: 6px 12px;font - size: 14px;line - height: 1.42857143;color: #555;background - color: #fff;background - image: none;border: 1px solid #ccc;border - radius: 4px;" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" value="Adicionar Link" class="btn btn-danger" formaction="/home/AddLink2/" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}
+<script type="text/javascript">
+    $(".chosen-select").chosen({ width: '90%' });
+    var config = {
+        '.chosen-select': {},
+        '.chosen-select-deselect': { allow_single_deselect: true },
+        '.chosen-select-no-single': { disable_search_threshold: 10 },
+        '.chosen-select-no-results': { no_results_text: 'Oops, contacto não encontrado!' },
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+</script>
+

@@ -1,0 +1,284 @@
+﻿
+@{
+    ViewBag.Title = "Estatisticas Aplicações";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/EstatisticaAplicacoes");
+</script>
+
+<h2>Processar Estatística Aplicações</h2>
+<html>
+<head>
+    <title>Processamento de Informação Estatistica de Aplicações</title>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.theme.min.css" />
+
+    <!-- add the shim first -->
+    <script type="text/javascript" src="~/Scripts/shim.min.js"></script>
+    <!-- after the shim is referenced, add the library -->
+    <script type="text/javascript" src="~/Scripts/xlsx.full.min.js"></script>
+</head>
+@model PortalDSEMonitorizacao.Models.EstatisticaAplicacaoViewModel
+<body>
+    <table>
+        <tr>
+            <td><b> NB:</b> O processamendo desta Estatística poderá levar mais de 10 minutos dependendo do número de aplicações e do período especificado!</td>
+        </tr>
+    </table>
+    @using (Html.BeginForm("EstatisticaAplicacoes2", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <table>
+            <tr>
+                <td>Especificar datas:</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Inicio:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.TextBox("dataInicio", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Fim:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.TextBox("dataFim", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Especificar SLA (Disponibilidade):</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("SLA:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    @Html.TextBox("sladefinidoD", "99", new { @class = "form-control" })
+                </td>
+            </tr>
+            <tr>
+                <td>Especificar SLA (Performance):</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("SLA:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    @Html.TextBox("sladefinidoP", "98", new { @class = "form-control" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Output:
+                </td>
+            </tr>
+        </table>
+        <table id="headerTable">
+            <tr>
+                <td><b> Os dados Estatísticos processados são relativos ao período especificado</b> </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+
+            @{
+                if (Model.sladefinidoP != null && Model.sladefinidoD != null && Model.periodoEspecificado != null)
+                {
+                    <tr>
+                        <td>
+                            Período dos dados : <b>@Model.periodoEspecificado</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                    if (Model.numeroAplicacoes != null)
+                    {
+                        <tr>
+                            <td>
+                                Número de Aplicações : <b>@Model.numeroAplicacoes</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    }
+                    if (Model.disponibilidadeGeral != null)
+                    {
+                        <tr>
+                            <td>
+                                Disponibilidade Geral das Aplicações: <b>@Model.disponibilidadeGeral</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    }
+                    if (Model.performanceGeral != null)
+                    {
+                        <tr>
+                            <td>
+                                Performance Geral das Aplicações: <b>@Model.performanceGeral</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+                                @if (Model.EstatisticasAplicacoes != null)
+                                {
+                                    <tr style="background-color:#D1005D">
+                                        <th class="text-center">Nome</th>
+                                        <th class="text-center">Disponibilidade (%)</th>
+                                        <th class="text-center">Performance (%)</th>
+                                    </tr>
+                                    foreach (var dataItem in Model.EstatisticasAplicacoes)
+                                    {
+                                        <tr class="trcont">
+                                            <td align="center">
+                                                @dataItem.Nome
+                                            </td>
+                                            <td align="center">
+                                                @dataItem.Disponibilidade
+                                            </td>
+                                            <td align="center">
+                                                @dataItem.Performance
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+        <table>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="Submit" value="Processar Estatísica" class="btn btn-success" onclick="callProgress()" formaction="/home/EstatisticaAplicacoes2" />
+                </td>
+            </tr>
+        </table>
+    }
+
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" id="hidenbtn" value="Exportar para XLS" class="btn btn-primary" onclick="tableToExcel('headerTable',' Estatistica Aplicações ','EstatisticaAplicacoes.xls')" disabled />
+            </td>
+        </tr>
+    </table>
+    <div class="row" Style="margin-top: 1%;">
+        <div class="col-md-8">
+            <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Estatistica. Por Favor, Contacte o Administrador da Página. </p>
+        </div>
+    </div>
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#dataInicio").datepicker({
+                dateFormat: 'yy-mm-dd',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior'
+            });
+            $("#dataFim").datepicker({
+                dateFormat: 'yy-mm-dd',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior'
+            });
+
+        });
+
+        function callProgress() {
+            $("#divLoading").show();
+        };
+    </script>
+    @section scripts{
+        <script>
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><?xml version="1.0" encoding="UTF-8" standalone="yes"?><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name, fileName) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+
+                    var link = document.createElement("A");
+                    link.href = uri + base64(format(template, ctx));
+                    link.download = fileName || 'Workbook.xls';
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            })();
+        </script>
+    }
+    @Html.Raw(TempData["showmsg"])
+</body>
+</html>
+

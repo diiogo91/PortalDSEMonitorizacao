@@ -1,0 +1,72 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Editar Contacto";
+}
+
+@model PortalDSEMonitorizacao.Models.EditarContactoListView
+
+@using (Html.BeginForm("EditContactoEq2", "Home", FormMethod.Get))
+{
+ 
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">EDITAR DADOS DE: @Model.contacto.Nome</p>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.HiddenFor(model => model.contacto.Id, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.contacto.Id, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.contacto.Id)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("(*) Nome", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.contacto.Nome, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.contacto.Nome)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.contacto.Equipa, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.contacto.Equipa, new SelectList(Model.equipas, "Nome", "Nome"), htmlAttributes: new { @class = "form-control", @id = "Region" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(model => model.contacto.IDEquipa, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.contacto.IDEquipa, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.contacto.IDEquipa)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.contacto.Telefone, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.contacto.Telefone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.contacto.Telefone)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.contacto.Email, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.contacto.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.contacto.Email)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <p align="left">(*) Campos Obrigatórios</p>
+        <input type="submit" value="Confirmar" class="btn btn-danger" formaction="/home/EditContactoEq2/@Model.contacto.Id" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}

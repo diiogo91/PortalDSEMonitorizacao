@@ -5,6 +5,10 @@ using ELFinder.Connector.ASPNet.ModelBinders;
 using ELFinder.Connector.Config;
 using System.Diagnostics;
 using PortalDSEMonitorizacao.Config;
+using PortalDSEMonitorizacao.Models.Libraries;
+using MongoDB.Bson;
+using System.Web.Http;
+using System;
 
 namespace PortalDSEMonitorizacao
 {
@@ -22,12 +26,23 @@ namespace PortalDSEMonitorizacao
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
 
+            //Fix ObjectId null value returned from Model to Controller
+            ModelBinders.Binders.Add(typeof(ObjectId), new ObjectIdModelBinder());
             // Use custom model binder
             ModelBinders.Binders.DefaultBinder = new ELFinderModelBinder();
 
             // Initialize ELFinder configuration
             InitELFinderConfiguration();
+
+            //JSON API SUPPORT
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings
+            .Add(new System.Net.Http.Formatting.RequestHeaderMapping("Accept",
+                                          "text/html",
+                                          StringComparison.InvariantCultureIgnoreCase,
+                                          true,
+                                          "application/json"));
 
         }
 
@@ -38,15 +53,16 @@ namespace PortalDSEMonitorizacao
         {
 
             SharedConfig.ELFinder = new ELFinderConfig(
-                Server.UrlPathEncode(@"D:\PortalMon"),
+               // Server.UrlPathEncode(@"D:\PortalMon"),
+                Server.UrlPathEncode(@"\\semzseiptg12\PortalMon"),
                 thumbnailsUrl: "Thumbnails/"
                 );
 
-            Debug.WriteLine(Server.UrlPathEncode(@"D:\PortalMon"));
+            Debug.WriteLine(Server.UrlPathEncode(@"\\semzseiptg12\PortalMon"));
 
             SharedConfig.ELFinder.RootVolumes.Add(
                 new ELFinderRootVolumeConfigEntry(
-                    Server.UrlPathEncode(@"D:\PortalMon\DOCUMENTACAO"),
+                    Server.UrlPathEncode(@"\\semzseiptg12\PortalMon\DOCUMENTACAO"),
                     isLocked: false,
                     isReadOnly: false,
                     isShowOnly: false,

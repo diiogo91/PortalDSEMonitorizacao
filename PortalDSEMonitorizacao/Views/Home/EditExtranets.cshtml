@@ -1,0 +1,156 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Editar Contacto Balcões";
+}
+
+@model PortalDSEMonitorizacao.Models.ContactExtranet
+@using (Html.BeginForm("EditExtranets2", "Home", FormMethod.Get))
+{
+ 
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">EDITAR DADOS DE: @Model.Contacto.Nome</p>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.HiddenFor(model => model.Id, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.Id, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Contacto.Nome, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Contacto.Nome, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Contacto.Nome)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Notf_Email, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                List<SelectListItem> listItems2 = new List<SelectListItem>();
+                if (Model.Notf_Email == "SIM")
+                {
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim",
+                        Selected = true
+                    });
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao"
+                    });
+                }
+                else
+                {
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim"
+                    });
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao",
+                        Selected = true
+                    });
+                }
+                    }
+                    @Html.DropDownListFor(model => model.Notf_Email, listItems2, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Notf_Email)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Notf_SMS, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                List<SelectListItem> listItems3 = new List<SelectListItem>();
+                if (Model.Notf_SMS == "SIM")
+                {
+                    listItems3.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim",
+                        Selected = true
+                    });
+                    listItems3.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao"
+                    });
+                }
+                else
+                {
+                    listItems3.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim"
+                    });
+                    listItems3.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao",
+                        Selected = true
+                    });
+                }
+                    }
+                    @Html.DropDownListFor(model => model.Notf_SMS, listItems3, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Notf_SMS)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fim, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                List<SelectListItem> listItems4 = new List<SelectListItem>();
+                if (Model.Fim == "to")
+                {
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "to",
+                        Value = "to",
+                        Selected = true
+                    });
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "cc",
+                        Value = "cc"
+                    });
+                }
+                else
+                {
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "To",
+                        Value = "to"
+                    });
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "CC",
+                        Value = "cc",
+                        Selected = true
+                    });
+                }
+                    }
+                    @Html.DropDownListFor(model => model.Fim, listItems4, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Fim)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" value="Confirmar" class="btn btn-danger" formaction="/home/EditExtranets2/@Model.Id" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}

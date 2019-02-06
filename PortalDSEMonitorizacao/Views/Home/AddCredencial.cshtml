@@ -1,0 +1,62 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Add Contacto ";
+}
+
+@using (Html.BeginForm("AddCredencial2", "Home", FormMethod.Post))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">Adicionar Nova Credencial</p>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("lblName", "(*) User:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmUser", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("blbPass", "Password:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmPassword", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblName", "Visibilidade da Password:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                    List<SelectListItem> listItems1 = new List<SelectListItem>();
+                    listItems1.Add(new SelectListItem
+                    {
+                        Text = "Todos Users do Dominio",
+                        Value = "true",
+                        Selected = true
+                    });
+                    listItems1.Add(new SelectListItem
+                    {
+                        Text = "Somente Users do DSE-Monitorização",
+                        Value = "false"
+                    });
+                    }
+                    @Html.DropDownList("frmvisibilidade", listItems1, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("blbPass", "Descrição:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextArea("frmDescricao", htmlAttributes: new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" value="Adicionar Credencial" class="btn btn-danger" formaction="/home/AddCredencial2/" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}

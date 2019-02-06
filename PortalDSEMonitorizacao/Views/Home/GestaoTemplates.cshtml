@@ -1,0 +1,177 @@
+﻿
+@{
+    ViewBag.Title = "Gestão de Templates";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/GestaoTemplates");
+</script>
+<script src="@Url.Content("~/Scripts/chosen.jquery.js")" type="text/javascript"></script>
+<h2>Gestão de Templates de Notificações ( Grupos de Contactos a Notificar )</h2>
+<html>
+
+<body>
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" value="Criar novo Template" class="btn btn-success btnAdicionarTemplate" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="10">
+                <div class="row" Style="margin-top: 1%;">
+                    <div class="col-md-8">
+                        <p id="hidenatt4" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Informação. Por Favor, Contacte o Administrador da Página. </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="10">
+                <div class="row" Style="margin-top: 1%;">
+                    <div class="col-md-8">
+                        <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Informação. Por Favor, Contacte o Administrador da Página. </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </br>
+    @model PortalDSEMonitorizacao.Models.GestaoTemplatesListViewModel
+    <form method="POST">
+        <div class="scrollingTable">
+            <table>
+                <tr>
+                    <td>
+                        <b>Template</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table table-bordered table-hover" style="width: 100%">
+                            <tr style="background-color:#D1005D">
+                                <th class="text-center">Acção</th>
+                                <th class="text-center">Nome</th>
+                                <th class="text-center">Contactos</th>
+                            </tr>
+                            @if (Model.templates != null)
+                            {
+                                foreach (var dataItem in Model.templates)
+                                {
+                                    <tr class="trcont">
+                                        <td id=@dataItem.Id align="center">
+                                            <a href="#" class="btn btn-link btnEditarTemplate" data-value="@dataItem.Id">Editar</a> |
+                                            <input type="submit" id="remover_@dataItem.Id" class="btn btn-link"
+                                                   value="Remover" formaction="/home/RemoveTemplate/@dataItem.Id" data-value="@dataItem.Id" />
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.NomeTemplate
+                                        </td>
+                                        @{
+                                            String contactos = "";
+                                            foreach (var dataItem2 in @dataItem.Contactos)
+                                            {
+                                                contactos = contactos + dataItem2.Nome + "; ";
+                                            }
+                                            <td align="center">
+                                                @contactos
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="width:100%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="teste"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts{
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.ajaxSetup({ cache: false });
+                $(".btnAdicionarTemplate").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/AddTemplate/",
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+                $(".btnEditarTemplate").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/EditTemplate/" + id,
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+            });
+        </script>
+    }
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+                    top: 0px; width: 800px; height: 100%; background-color: #666666; z-index: 30001;
+                    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+    <script type="text/javascript">
+        $(".chosen-select").chosen({ width: '100%' });
+        var config = {
+            '.chosen-select': {},
+            '.chosen-select-deselect': { allow_single_deselect: true },
+            '.chosen-select-no-single': { disable_search_threshold: 10 },
+            '.chosen-select-no-results': { no_results_text: 'Oops, contacto não encontrado!' },
+            '.chosen-select-width': { width: "100%" }
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+        function clear() {
+            $('.drpContactos option:selected').removeAttr('selected');
+            $('.chosen-select').trigger('chosen:updated');
+        };
+
+    </script>
+    @Html.Raw(TempData["showmsg"])
+    @Html.Raw(TempData["showmsg2"])
+
+</body>
+</html>
+

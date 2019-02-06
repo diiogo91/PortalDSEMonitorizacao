@@ -1,0 +1,321 @@
+﻿
+@{
+    ViewBag.Title = "Registo Indisponibilidade";
+    ViewBag.UserName = System.Web.HttpContext.Current.User.Identity.Name;
+}
+
+
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/RegistoIndisponibilidade");
+</script>
+<h2>Indisponibilidade de Aplicações e Serviços Mobile</h2>
+<html>
+
+<body>
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <h3>Registrar indisponibilidade de:</h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" value="Serviços Mobile" class="btn btn-danger btnRegistrar" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" value="Aplicações" class="btn btn-danger btnRegistrarApps" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <h3>Filtrar:</h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" value="Filtrar por Serviço Mobile" class="btn btn-info btnFiltrarS" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" value="Filtrar por Aplicação " class="btn btn-info btnFiltrarA" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="10">
+                <div class="row" Style="margin-top: 1%;">
+                    <div class="col-md-8">
+                        <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Informação. Por Favor, Contacte o Administrador da Página. </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </br>
+    @model PortalDSEMonitorizacao.Models.IndisponibilidadesListViewModel
+    <form method="POST">
+        <div class="scrollingTable">
+
+            <table>
+                <tr>
+                    <td style="background-color:#f45342;">
+                        <b>Indisponibilidades Por Resolver (Pendentes)</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table table-bordered table-hover" style="width: 100%">
+                            <tr style="background-color:#D1005D">
+                                <th class="text-center">Acção</th>
+                                <th class="text-center">Data Inicio</th>
+                                <th class="text-center">Entidade</th>
+                                <th class="text-center">Serviço/Aplicação</th>
+                                <th class="text-center">Resolvido</th>
+                                <th class="text-center">Descrição do Problema</th>
+                                <th class="text-center">User</th>
+                            </tr>
+                            @if (Model.inidsponibilidadesPendentes != null)
+                            {
+                                foreach (var dataItem in Model.inidsponibilidadesPendentes)
+                                {
+                                    <tr class="trcont">
+                                        <td id=@dataItem.Id align="center">
+                                            <a href="#" class="btn btn-link btnEditar" data-value="@dataItem.Id">Editar</a> |
+                                            <input type="submit" id="remover_@dataItem.Id" class="btn btn-link"
+                                                   value="Remover" formaction="/home/RemoveIndisponibilidade/@dataItem.Id" data-value="@dataItem.Id" />
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.DataInicio.ToString(string.Format("dd/MM/yyyy HH:mm"))
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.Operadora.Nome
+                                        </td>
+                                        @if (@dataItem.Servico == null)
+                                        {
+                                            <td align="center">
+                                                @dataItem.Aplicacao.Nome
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td align="center">
+                                                @dataItem.Servico.Nome
+                                            </td>
+                                        }
+                                        @if (@dataItem.Resolvido == true)
+                                        {
+                                            <td align="center">
+                                                Sim
+                                            </td>
+                                        }
+                                        @if (@dataItem.Resolvido == false)
+                                        {
+                                            <td align="center">
+                                                Não
+                                            </td>
+                                        }
+                                        <td align="center">
+                                            @dataItem.DescricaoProblema
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.User
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background-color:#198e69;">
+                        <b>Indisponibilidades Resolvidas</b>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <table class="table table-bordered table-hover" style="width: 100%">
+                            <tr style="background-color:#D1005D">
+                                <th class="text-center">Acção</th>
+                                <th class="text-center">Data Inicio</th>
+                                <th class="text-center">Data Resolução</th>
+                                <th class="text-center">Tempo de Ind.(dia(s) e hora(s))</th>
+                                <th class="text-center">Entidade</th>
+                                <th class="text-center">Serviço/Aplicação</th>
+                                <th class="text-center">Descrição da Resolução</th>
+                                <th class="text-center">User</th>
+                            </tr>
+                            @if (Model.inidsponibilidadesResolvidas != null)
+                            {
+                                foreach (var dataItem in Model.inidsponibilidadesResolvidas)
+                                {
+                                    <tr class="trcont">
+                                        <td id=@dataItem.Id align="center">
+                                            <a href="#" class="btn btn-link btnEditar" data-value="@dataItem.Id">Editar</a> |
+                                            <input type="submit" id="remover_@dataItem.Id" class="btn btn-link"
+                                                   value="Remover" formaction="/home/RemoveIndisponibilidade/@dataItem.Id" data-value="@dataItem.Id" />
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.DataInicio.ToString(string.Format("dd/MM/yyyy HH:mm"))
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.DataFim.ToString(string.Format("dd/MM/yyyy HH:mm"))
+                                        </td>
+
+                                        <td align="center">
+                                            @if (dataItem.Intervalo.Hours.ToString() == "0" & dataItem.Intervalo.Minutes.ToString() == "0")
+                                            {
+                                                TimeSpan time2 = dataItem.DataFim.Subtract(dataItem.DataInicio);
+                                                String time = time2.Days.ToString() + ":" + time2.Hours.ToString() + ":" + time2.Minutes.ToString();
+                                                @time
+                                            }
+                                            else
+                                            {
+                                                String time = dataItem.Intervalo.Days.ToString() + ":" + dataItem.Intervalo.Hours.ToString() + ":" + dataItem.Intervalo.Minutes.ToString();
+                                                @time
+                                            }
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.Operadora.Nome
+                                        </td>
+                                        @if (@dataItem.Servico == null)
+                                        {
+                                            <td align="center">
+                                                @dataItem.Aplicacao.Nome
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td align="center">
+                                                @dataItem.Servico.Nome
+                                            </td>
+                                        }
+                                        <td align="center">
+                                            @dataItem.DescricaoProblema
+                                        </td>
+                                        <td align="center">
+                                            @dataItem.User
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="teste"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts{
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.ajaxSetup({ cache: false });
+                $(".btnRegistrar").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/RegistrarIndisponibilidade/",
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+                $(".btnRegistrarApps").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/RegistrarIndisponibilidadeApps/",
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+                $(".btnEditar").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/EditarIndisponibilidade/" + id,
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+                $(".btnFiltrarA").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/FiltrarIndPorAplicacao/",
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+                $(".btnFiltrarS").click(function () {
+                    var id = $(this).data("value");
+                    $("#teste").load("/Home/FiltrarIndPorServico/",
+                        function () {
+                            $('#myModal').modal("show");
+                        });
+                });
+            });
+        </script>
+    }
+
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+                    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+                    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+
+
+    @Html.Raw(TempData["showmsg"])
+
+</body>
+</html>
+

@@ -1,0 +1,81 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Editar Contacto APC";
+}
+
+@model PortalDSEMonitorizacao.Models.ContactAPC
+
+@using (Html.BeginForm("EditExchange2", "Home", FormMethod.Get))
+{
+ 
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">EDITAR DADOS DE: @Model.Contacto.Nome</p>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.HiddenFor(model => model.Id, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.Id, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Contacto.Nome, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Contacto.Nome, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Contacto.Nome)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Notf_SMS, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                        List<SelectListItem> listItems3 = new List<SelectListItem>();
+                        if (Model.Notf_SMS == "SIM")
+                        {
+                            listItems3.Add(new SelectListItem
+                            {
+                                Text = "Sim",
+                                Value = "Sim",
+                                Selected = true
+                            });
+                            listItems3.Add(new SelectListItem
+                            {
+                                Text = "Nao",
+                                Value = "Nao"
+                            });
+                        }
+                        else
+                        {
+                            listItems3.Add(new SelectListItem
+                            {
+                                Text = "Sim",
+                                Value = "Sim"
+                            });
+                            listItems3.Add(new SelectListItem
+                            {
+                                Text = "Nao",
+                                Value = "Nao",
+                                Selected = true
+                            });
+                        }
+                    }
+                    @Html.DropDownListFor(model => model.Notf_SMS, listItems3, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Notf_SMS)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" value="Confirmar" class="btn btn-danger" formaction="/home/EditExchange2/@Model.Id" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}

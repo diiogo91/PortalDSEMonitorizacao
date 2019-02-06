@@ -9,7 +9,7 @@
 @Html.Raw(TempData["msg"])
 <script type="text/javascript">
     //window.location.hash ="/Home/balcoes";
-    window.history.replaceState(null, "Title", "/home/balcoes");
+    window.history.replaceState(null, "Title", "/Home/balcoes");
 </script>
 
 <h2 align="center">Gestão de Contactos: Comunicações com os Balcões</h2>
@@ -19,10 +19,39 @@
 <html>
 <head>
     <title>Gestão de Contactos - Comunicações com os Balcões</title>
-    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
-    <script src="~/Scripts/jquery-1.9.1.js"></script>
 </head>
 <body onload="maketableScroll2();">
+
+    @using (Html.BeginForm("FiltrarContactBalcoes", "Home", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td colspan="2">
+                    @Html.Label("Filtrar por Nome ", new { @class = "control-label" })
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    @Html.TextBox("filtroNome", "", new { @id = "filtroNome", @class = "form-control" })
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input type="submit" id="filtrar" class="btn btn-success"
+                           value="Filtrar" formaction="/home/FiltrarContactBalcoes" />
+                </td>
+            </tr>
+        </table>
+    }
+
     <form method="POST">
         <div class="scrollingTable">
 
@@ -33,14 +62,16 @@
                 <tr style="background-color:#D1005D">
                     <th class="text-center">Acção</th>
                     <th class="text-center">Nome</th>
-                    <th class="text-center">Equipa</th>
+                    <th class="text-center">Zona</th>
                     <th class="text-center">Telefone</th>
                     <th class="text-center">Email</th>
                     <th class="text-center">Notf_Email</th>
                     <th class="text-center">Notf_SMS</th>
                 </tr>
+
                 @model PortalDSEMonitorizacao.Models.ContactsBalcaoListViewModel
-                @if (Model != null)
+
+                @if (Model.Contactbalcao != null)
                 {
                     foreach (var dataItem in Model.Contactbalcao)
                     {
@@ -51,16 +82,36 @@
                                        value="Remover" formaction="/home/Remove/@dataItem.Id" data-value="@dataItem.Id" />
                             </td>
                             <td align="center">
-                                @dataItem.Nome
+                                @dataItem.Contacto.Nome
                             </td>
                             <td align="center">
-                                @dataItem.Equipa
+                                @if(dataItem.Zona == "sc")
+                                {
+                                    var desc = "Serviços Centrais";
+                                    @desc
+                                }
+                                @if(dataItem.Zona == "norte")
+                                {
+                                    var desc = "Dir. Comercial Norte";
+                                    @desc
+                                }
+                                @if(dataItem.Zona == "centro")
+                                {
+                                    var desc = "Dir. Comercial Centro";
+                                    @desc
+                                }
+                                @if(dataItem.Zona == "sul")
+                                {
+                                    var desc = "Dir. Comercial Sul";
+                                    @desc
+                                }
+                                
                             </td>
                             <td align="center">
-                                @dataItem.Telefone
+                                @dataItem.Contacto.Telefone
                             </td>
                             <td align="center">
-                                @dataItem.Email
+                                @dataItem.Contacto.Email
                             </td>
                             <td align="center">
                                 @dataItem.Notf_Email
@@ -95,11 +146,17 @@
                                     $('#myModal').modal("show");
                                 });
                         });
+                        $(".btnAddContacto").click(function () {
+                            var id = $(this).data("value");
+                            $("#teste").load("/Home/AddContactoBalcoes/",
+                                function () {
+                                    $('#myModal').modal("show");
+                                });
+                        });
                     });
                 </script>
             }
         </div>
-
         <div class="row" Style="margin-top: 1%;">
             <div class="col-md-8">
                 <p id="hidenatt" Style="color:#ff2c50">Alterações Gravadas com Sucesso...</p>
@@ -113,16 +170,14 @@
         <script type="text/javascript">
             document.getElementById("hidenatt").style.display = "none";
         </script>
-
-        <div class="row" Style="margin-top: 1cm;">
+        <div class="row" Style="margin-top: 0.2cm;">
             <div class="col-md-1">
-                <input type="submit" id="btngravar" class="btn btn-success"
-                       value="Gravar Alterações" formaction="/home/SalvarAlteracoesBalcoes" />
+                <a href="#" class="btn btn-danger btnAddContacto">Associar Novo Contacto</a>
+            </div>
+            <div class="col-md-1">
             </div>
         </div>
-
         @Html.Raw(TempData["showmsg"])
-
     </form>
 
 </body>

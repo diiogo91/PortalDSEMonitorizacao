@@ -11,7 +11,7 @@
  
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-        <p align="center">EDITAR DADOS DE: @Model.Nome</p>
+        <p align="center">EDITAR DADOS DE: @Model.Contacto.Nome</p>
     </div>
 
     <div class="modal-body">
@@ -25,69 +25,78 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Nome, new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.Contacto.Nome, new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @readonly = "readonly" })
-                    @Html.ValidationMessageFor(model => model.Nome)
+                    @Html.TextBoxFor(model => model.Contacto.Nome, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Contacto.Nome)
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Equipa, new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.Zona, new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.Equipa, new { @class = "form-control", @readonly = "readonly" })
-                    @Html.ValidationMessageFor(model => model.Equipa)
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Telefone, new { @class = "control-label col-md-3" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.Telefone, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Telefone)
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-3" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Email)
+                    @{
+                        List<SelectListItem> listItems3 = new List<SelectListItem>();
+                        listItems3.Add(new SelectListItem
+                        {
+                            Text = "Serviços Centrais",
+                            Value = "sc",
+                            Selected = true
+                        });
+                        listItems3.Add(new SelectListItem
+                        {
+                            Text = "Dir. Comercial Sul",
+                            Value = "sul"
+                        });
+                        listItems3.Add(new SelectListItem
+                        {
+                            Text = "Dir. Comercial Norte",
+                            Value = "norte"
+                        });
+                        listItems3.Add(new SelectListItem
+                        {
+                            Text = "Dir. Comercial Centro",
+                            Value = "centro"
+                        });
+                    }
+                    @Html.DropDownListFor(model => model.Zona, listItems3, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Zona)
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Notf_Email, new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
                     @{
-                        List<SelectListItem> listItems = new List<SelectListItem>();
-                        if (Model.Notf_Email == "SIM")
-                        {
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "Sim",
-                                Value = "Sim",
-                                Selected = true
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "Nao",
-                                Value = "Nao"
-                            });
-                        }
-                        else
-                        {
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "Sim",
-                                Value = "Sim"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "Nao",
-                                Value = "Nao",
-                                Selected = true
-                            });
-                        }
+                List<SelectListItem> listItems2 = new List<SelectListItem>();
+                if (Model.Notf_Email == "SIM")
+                {
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim",
+                        Selected = true
+                    });
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao"
+                    });
+                }
+                else
+                {
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim"
+                    });
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao",
+                        Selected = true
+                    });
+                }
                     }
-                    @Html.DropDownListFor(model => model.Notf_Email, listItems, new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.Notf_Email, listItems2, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Notf_Email)
                 </div>
             </div>
@@ -95,38 +104,37 @@
                 @Html.LabelFor(model => model.Notf_SMS, new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
                     @{
-                        List<SelectListItem> listItems2 = new List<SelectListItem>();
-                        if (Model.Notf_SMS == "SIM")
-                        {
-                            listItems2.Add(new SelectListItem
-                            {
-                                Text = "Sim",
-                                Value = "Sim",
-                                Selected = true
-                            });
-                            listItems2.Add(new SelectListItem
-                            {
-                                Text = "Nao",
-                                Value = "Nao"
-                            });
-                        }
-                        else
-                        {
-                            listItems2.Add(new SelectListItem
-                            {
-                                Text = "Sim",
-                                Value = "Sim"
-                            });
-                            listItems2.Add(new SelectListItem
-                            {
-                                Text = "Nao",
-                                Value = "Nao",
-                                Selected = true
-                            });
-                        }
-
+                List<SelectListItem> listItems4 = new List<SelectListItem>();
+                if (Model.Notf_SMS == "SIM")
+                {
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim",
+                        Selected = true
+                    });
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao"
+                    });
+                }
+                else
+                {
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "Sim",
+                        Value = "Sim"
+                    });
+                    listItems4.Add(new SelectListItem
+                    {
+                        Text = "Nao",
+                        Value = "Nao",
+                        Selected = true
+                    });
+                }
                     }
-                    @Html.DropDownListFor(model => model.Notf_SMS, listItems2, new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.Notf_SMS, listItems4, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Notf_SMS)
                 </div>
             </div>

@@ -1,0 +1,202 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Editar Contacto Balcões";
+}
+<head>
+    <title>Registo de Indisponibilidade de Serviços Mobile</title>
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.theme.min.css" />
+    <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+</head>
+
+@model PortalDSEMonitorizacao.Models.EditarIndisponibilidadeListView
+
+@using (Html.BeginForm("EditarIndisponibilidade2", "Home", FormMethod.Post))
+{
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">Registrar Indisponibilidade ID:  @Model.indisponibilidade.Id</p>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <table>
+                <tr>
+                    <td>Especificar datas:</td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Início:", new { @class = "control-label col-md-3" })
+                    </td>
+                    <td>
+                        <div class='input-group date' id='datetimepicker1'>
+                            @Html.TextBox("dataInicio",Model.indisponibilidade.DataInicio.ToString(string.Format("dd/MM/yyyy HH:mm")), new { @id= "dataInicio", @class = "form-control" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Fim:", new { @class = "control-label col-md-3" })
+                    </td>
+                    <td>
+                        <div class='input-group date' id='datetimepicker2'>
+                            @Html.TextBox("dataFim", Model.indisponibilidade.DataFim.ToString(string.Format("dd/MM/yyyy HH:mm")), new { @id= "dataFim", @class = "form-control" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>Entidade & Serviço:</td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Entidade:", new { @class = "control-label col-md-3" })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.indisponibilidade.Operadora.Id, new SelectList(Model.provedores, "Id", "Nome"), htmlAttributes: new { @class = "form-control", @id = "Region" })
+                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                         @if (Model.indisponibilidade.Servico != null)
+                         {
+                           @Html.Label("Serviço:", new { @class = "control-label col-md-3" })
+                         }
+                         else if (Model.indisponibilidade.Aplicacao != null)
+                         {
+                           @Html.Label("Aplicação:", new { @class = "control-label col-md-3" })
+                         }
+                    </td>
+                    <td>
+                        @if (Model.indisponibilidade.Servico == null)
+                        {
+                             @Html.HiddenFor(model => model.indisponibilidade.Servico.Id, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.indisponibilidade.Servico.Id, new SelectList(Model.servicosMobile, "Id", "Nome"), htmlAttributes: new { @class = "form-control", @id = "Region" })
+                        }
+                        @if(Model.indisponibilidade.Aplicacao == null)
+                        {
+                             @Html.HiddenFor(model => model.indisponibilidade.Aplicacao.Id, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        else
+                        {
+                             @Html.DropDownListFor(model => model.indisponibilidade.Aplicacao.Id, new SelectList(Model.aplicacoes, "Id", "Nome"), htmlAttributes: new { @class = "form-control", @id = "Region" })
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.Label("Resolvido:", new { @class = "control-label col-md-3" })
+                    </td>
+                    <td>
+                        @{
+                            List<SelectListItem> listItems3 = new List<SelectListItem>();
+                            listItems3.Add(new SelectListItem
+                            {
+                                Text = "Sim",
+                                Value = "true"
+                            });
+                            listItems3.Add(new SelectListItem
+                            {
+                                Text = "Não",
+                                Value = "false",
+                                Selected = true
+                            });
+                         }
+                        @Html.DropDownListFor(model => model.indisponibilidade.Resolvido, listItems3, new {@class = "form-control" })
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <th>Descrição (Problema / Resolução) :</th>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.TextAreaFor(model => model.indisponibilidade.DescricaoProblema, htmlAttributes: new {@class = "form-control", @style = "width: 100%; max-width: 100%;" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" name="Submit" value="Salvar" class="btn btn-success" onclick="callProgress()" formaction="/home/EditarIndisponibilidade2/@Model.indisponibilidade.Id" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+}
+@Html.Raw(TempData["showmsg"])
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataInicio').datetimepicker({
+            locale: 'pt'
+        });
+    });
+    $(document).ready(function () {
+        $('#dataFim').datetimepicker({
+            locale: 'pt'
+        });
+    });
+
+    function callProgress() {
+        $("#divLoading").show();
+    };
+</script>

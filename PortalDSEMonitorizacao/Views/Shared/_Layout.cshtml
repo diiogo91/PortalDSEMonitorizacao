@@ -4,9 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebApplication</title>
-    <link rel="stylesheet" href="~/Content/site.css" />
     <link rel="stylesheet" href="~/Content/bootstrap.css" />
     <link rel="stylesheet" href="~/Content/bootstrap-theme.css" />
+    <link rel="stylesheet" href="~/Content/site.css" />
+    <link rel="stylesheet" href="~/Content/chosen.css" />
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/site.js"></script>
 </head>
 <body>
 
@@ -19,101 +23,107 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <img src="http://semzseiptg11:16661/images/newlogo.png" alt="Banner Image" height="50" />
-                <img src="http://semzseiptg11:16661/images/prtgwlogo.png" alt="Banner Image" height="50" />
+                <img src="http://semzseiptg12:16661/images/newlogo.png" alt="Banner Image" height="50" />
+                <img src="http://semzseiptg12:16661/images/prtgwlogo.png" alt="Banner Image" height="50" />
             </div>
+
             <div class="collapse navbar-collapse navbar-left" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li> @Html.ActionLink("Home", "Index", "Home", null, new { @class = "white-link" })</li>
                     <li> @Html.ActionLink("Documentação", "Documentacao", "ELFinder", null, new { @class = "white-link" })</li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Dahsboards de Monitorização<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Monitorização<b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                            <li> @Html.ActionLink("Registo de Indisponibilidade", "RegistoIndisponibilidade", "Home", null, new { @class = "white-link" })</li>
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Gestão de Informação</a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-submenu">
+                                        <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Associação de Contactos a Notificações</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("APC´s - Data Center (SMS)", "APC", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Exchange Mail Queue (SMS)", "Exchange", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Comunicações - Balcões (SMS & EMAIL)", "balcoes", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Comunicações - Extranets (SMS & EMAIL)", "Extranets", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Servidores - Milleteller (SMS & EMAIL)", "Milleteller", "Home", null, new { @class = "white-link" })</li>
+                                        </ul>
+                                    </li>
+                                    <li>@Html.ActionLink("Cartões SIM", "GestaoCartaoSIM", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Contactos", "Contactos", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Credenciais", "GestaoCredenciais", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Equipas e Grupos", "GestaoEquipas", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Serviços Mobile", "GestaoServicosMobile", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Aplicações", "GestaoAplicacoes", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Sondas e Servidores", "GestaoSondas", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Links e Dashboards", "GestaoLinks", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Templates de Notificações", "GestaoTemplates", "Home", null, new { @class = "white-link" })</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Reports & Notificações (SMS e Email)</b></a>
+                                <ul class="dropdown-menu">                              
+                                    <li class="dropdown-submenu">
+                                        <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Executar Scripts de Notificação</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("APC - Data Center", "ExecutarAPC", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("AKCP - DR MALUANA", "ExecutarAKCP", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Comunicações - Balcões", "ExecutarComunicacoes", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Comunicações - Extranets", "ExecutarExtranets", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Comunicações - ATMs - StandAlones", "ExecutarATMs", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado Servidores - SC", "ExecutarEServSC", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado AS400 - SC", "ExecutarAS400", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado RAID - Balcões", "ExecutarRAID", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado Serviço Milleteller", "ExecutarMilleteller", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado Espaço Disco - SC", "ExecutarEDiscoSC", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado Espaço Disco - Balcões", "ExecutarEDiscoB", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado Mcafee - Balcões", "ExecutarMcafeebc", "Home", null, new { @class = "white-link" })</li>
+                                            <li>@Html.ActionLink("Estado Mcafee - SC", "ExecutarMcafeesc", "Home", null, new { @class = "white-link" })</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Envio de Notificações (SMS´s e Email)", "EnvioNotificacoes", "Home", null, new { @class = "white-link" })
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="dropdown-submenu">
                                 <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">PRTG</a>
                                 <ul class="dropdown-menu">
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimbalcoesroteadores.htm" class="white-link">Monitorização de Balcões</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimtdm.htm" class="white-link">Monitorização de Balcões Links TDM</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimmovitel.htm" class="white-link">Monitorização de Balcões Links Movitel</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimmovitel.htm" class="white-link">Monitorização de Servidores Serviços Centrais</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimaplicacoes.htm" class="white-link">Monitorização de Aplicações</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimmcafee.htm" class="white-link">Monitorização de Mcafee Serviços Centrais</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimmcafeebc.htm" class="white-link">Monitorização de Mcafee Balções</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/prtgedsc.htm" class="white-link">Monitorização de Espaço em disco SC</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/prtgedbc.htm" class="white-link">Monitorização de Espaço em disco Balcões</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimbalcoes.htm" class="white-link">Monitorização de Servidores Milleteller</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimservidorescentrais.htm" class="white-link">Monitorização de Servidores Serviços Centrais</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimgruposervidorescentrais.htm" class="white-link">Monitorização de Grupos Servidores SC</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimexchange.htm" class="white-link">Monitorização de Servidores Exchange</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimadsedns.htm" class="white-link">Monitorização de Servidores ADS/DNS</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimapc.htm" class="white-link">Monitorização de APC´s</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimbd.htm" class="white-link">Monitorização de Bases de Dados</a></li>
-                                    <li><a target="_blank" href="http://semzseiptg11:16661/public/monbimmobile.htm" class="white-link">Monitorização de Mobile Banking</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Monitorização Serviços Mobile e Internet Banking</a>
-                                <ul class="dropdown-menu">
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mbimsms.htm" class="white-link"> Monitorização Principais Tabelas Mobile</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mmcel.htm" class="white-link"> Monitorização MCEL</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mvodacom.htm" class="white-link"> Monitorização VODACOM</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mmovitel.htm" class="white-link"> Monitorização MOVITEL</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mnotificacao.htm" class="white-link"> Monitorização Notificações</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mmodem.htm" class="white-link"> Monitorização Modem</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mcredelec.htm" class="white-link"> Monitorização CREDELEC</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mzap.htm" class="white-link"> Monitorização ZAP</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mstartimes.htm" class="white-link"> Monitorização STARTIMES</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/mmultichoice.htm" class="white-link"> Monitorização MultiChoice</a></li>
-                                    <li><a target="_blank" href="http://semzseimkt02/Mbim.mobileMonitor/msmartizi.htm" class="white-link"> Monitorização SMARTIZI</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Outros Links</a>
-                                <ul class="dropdown-menu">
-                                    <li><a target="_blank" href="https://semzseiswp11/swp/customgroup/saamang/" class="white-link"> SWIFT</a></li>
-                                    <li><a target="_blank" href="http://webmon/dashboard/default.aspx?dashboardName=Sites+MZ" class="white-link"> Webmon</a></li>
-                                    <li><a target="_blank" href="http://10.160.63.24/cacti/graph_view.php?action=tree&node=tbranch-8&hgd=&hyper=true" class="white-link"> Cacti - Tráfego BCP </a></li>
-                                    <li><a target="_blank" href="http://172.20.64.48:800/map.asp?map=bim.wup" class="white-link"> Watsapp BIM</a></li>
-                                    <li><a target="_blank" href="http://172.20.64.80:800/map.asp?map=tdm.wup" class="white-link"> Watsapp TDM</a></li>
-                                    <li><a target="_blank" href="http://172.20.64.18:800/map.asp?map=movitel.wup" class="white-link"> Watsapp MOVITEL</a></li>
-                                    <li><a target="_blank" href="http://172.20.64.70:800/map.asp?map=atm.wup" class="white-link"> Watsapp ATMs Standalones</a></li>
-                                    <li><a target="_blank" href="https://10.160.12.137/gui#monitor-system" class="white-link"> IBM Storage Prod</a></li>
-                                    <li><a target="_blank" href="https://10.160.20.137/gui#monitor-system" class="white-link"> IBM Storage DR</a></li>
-                                    <li><a target="_blank" href="http://semzseiwnl01/monitorizacao/Monitorizacao.aspx?Pagina=0 " class="white-link"> Monitorização de Processos</a></li>
+                                    <li> <a target="_blank" href="http://semzseiptg12:16661/index.htm" class="white-link">Portal PRTG Web</a></li>
+                                    <li> @Html.ActionLink("Listagem de Servidores Não Monitorizados", "MonitorizacaoPRTG", "Home", null, new { @class = "white-link" })</li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
 
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Gestão de Notificações<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Comunicações - Balcões", "balcoes", "Home", null, new { @class = "white-link" })</li>
-                            <li>@Html.ActionLink("Servidores - Milleteller", "Milleteller", "Home", null, new { @class = "white-link" })</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Scripts Monitorização<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Comunicações - Balcões", "ExecutarComunicacoes", "Home", null, new { @class = "white-link" })</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">IT Dahsboard<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Processar Estatísticas Mobile", "Index", "Home", null, new { @class = "white-link" })</li>
-                            <li>@Html.ActionLink("Processar Estatísticas Envio vs Recepção (SMS)", "Index", "Home", null, new { @class = "white-link" })</li>
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle white-link" data-toggle="dropdown">Processar Estatística - Mobile</a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Mensagens Enviadas (Modem)", "EstatisticasMobile", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Transações nos Serviços Mobile", "EstatisticasTransacoesMobile", "Home", null, new { @class = "white-link" })</li>
+                                    <li>@Html.ActionLink("Disponibilidade de Serviços Mobile", "EstatisticasDisponibilidadeMobile", "Home", null, new { @class = "white-link" })</li>
+                                </ul>
+                            </li>
+                            <li>@Html.ActionLink("Processar Estatística - Modem", "EstatisticasEnvioRecepcao", "Home", null, new { @class = "white-link" })</li>
+                            <li>@Html.ActionLink("Processar Estatística - Aplicações", "EstatisticaAplicacoes", "Home", null, new { @class = "white-link" })</li>
+                            <li>@Html.ActionLink("Processar Estatística - Storage EMC", "EstatisticasEMC", "Home", null, new { @class = "white-link" })</li>
+                            <li>@Html.ActionLink("Processar Estatística - Mcafee", "Mcafee", "Home", null, new { @class = "white-link" })</li>
+                            <li>@Html.ActionLink("Processar Estatística - Comunicações com os Balcões", "EstatisticasComunicacoes", "Home", null, new { @class = "white-link" })</li>
+                            <li>@Html.ActionLink("Processar Estatística - Comunicações Extranets", "EstatisticasExtranet", "Home", null, new { @class = "white-link" })</li>
                         </ul>
                     </li>
-                    <li> <a target="_blank" href="http://semzseiptg11:16661/index.htm" class="white-link">Portal PRTG</a></li>
                 </ul>
             </div>
+            @{var User1 = System.Web.HttpContext.Current.User.Identity.Name;}
+            <p class="navbar-text navbar-right" style="color: white; padding-right: 10%; font-size:18px;"><b>User: @User1</b></p>
         </div>
     </div>
     <div class="container body-content">
         <hr />
     </div>
-    <div class="container body-content">
+    <div class="container body-content" style="width:80%">
         @RenderBody()
         <hr />
         <footer>
@@ -133,10 +143,7 @@
         });
     </script>
     <environment names="Development">
-        <script src="~/Scripts/bootstrap.js"></script>
-        <script src="~/Scripts/site.js"></script>
     </environment>
-
     @RenderSection("scripts", false)
 </body>
 </html>

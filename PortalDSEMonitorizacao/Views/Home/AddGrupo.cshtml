@@ -1,0 +1,72 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Add Equipa";
+}
+<head>
+    <title>Registo de Indisponibilidade de Serviços Mobile</title>
+
+</head>
+
+@model PortalDSEMonitorizacao.Models.AddGrupoListViewModel
+@using (Html.BeginForm("AddGrupo2", "Home", FormMethod.Post))
+{
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">Adicionar Grupo</p>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("lblName", "(*) Nome:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBox("frmNome", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("lblEquipa", "Equipa:", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.ListBoxFor(model => model.SelectedOptions, new MultiSelectList(Model.equipas, "Id", "Nome"), htmlAttributes: new { @class = "chosen-select", data_placeholder = "Escolha a(s) equipa(s)", style = "display: block;width: 100 %;height: 100%;padding: 6px 12px;font - size: 14px;line - height: 1.42857143;color: #555;background - color: #fff;background - image: none;border: 1px solid #ccc;border - radius: 4px;" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <input type="submit" name="Submit" value="Adicionar" class="btn btn-success" onclick="callProgress()" formaction="/home/AddGrupo2" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+    <script type="text/javascript">
+        $(".chosen-select").chosen({ width: '90%' });
+        var config = {
+            '.chosen-select': {},
+            '.chosen-select-deselect': { allow_single_deselect: true },
+            '.chosen-select-no-single': { disable_search_threshold: 10 },
+            '.chosen-select-no-results': { no_results_text: 'Oops, contacto não encontrado!' },
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+    </script>
+
+}
+
+
+@Html.Raw(TempData["showmsg"])
+<script type="text/javascript">
+    function callProgress() {
+        $("#divLoading").show();
+    };
+</script>

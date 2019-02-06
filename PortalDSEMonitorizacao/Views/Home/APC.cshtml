@@ -1,0 +1,161 @@
+﻿@using System
+@using System.Activities.Expressions
+@using System.IO
+
+@{
+    ViewBag.Title = "Gestão de Contactos APC";
+
+}
+@Html.Raw(TempData["msg"])
+<script type="text/javascript">
+    //window.location.hash ="/Home/balcoes";
+    window.history.replaceState(null, "Title", "/Home/APC");
+</script>
+
+<h2 align="center">Gestão de Contactos: APC´s</h2>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Gestão de Contactos - APC´s</title>
+</head>
+<body onload="maketableScroll2();">
+
+    @using (Html.BeginForm("FiltrarContactAPC", "Home", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td colspan="2">
+                    @Html.Label("Filtrar por Nome ", new { @class = "control-label" })
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    @Html.TextBox("filtroNome", "", new { @id = "filtroNome", @class = "form-control" })
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input type="submit" id="filtrar" class="btn btn-success"
+                           value="Filtrar" formaction="/home/FiltrarContactAPC" />
+                </td>
+            </tr>
+        </table>
+    }
+
+    <form method="POST">
+        <div class="scrollingTable">
+
+
+            <br /><br />
+            <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+
+                <tr style="background-color:#D1005D">
+                    <th class="text-center">Acção</th>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Equipa</th>
+                    <th class="text-center">Telefone</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Notf_SMS</th>
+                </tr>
+
+                @model PortalDSEMonitorizacao.Models.ContactsAPCListViewModel
+
+                @if (Model.ContactsAPC != null)
+                {
+                    foreach (var dataItem in Model.ContactsAPC)
+                    {
+                        <tr class="trcont">
+                            <td id=@dataItem.Id align="center">
+                                <a href="#" class="btn btn-link btnEditar" data-value="@dataItem.Id">Editar</a> |
+                                <input type="submit" id="remover_@dataItem.Id" class="btn btn-link"
+                                       value="Remover" formaction="/home/RemoveAPC/@dataItem.Id" data-value="@dataItem.Id" />
+                            </td>
+                            <td align="center">
+                                @dataItem.Contacto.Nome
+                            </td>
+                            <td align="center">
+                                @dataItem.Contacto.Equipa
+                            </td>
+                            <td align="center">
+                                @dataItem.Contacto.Telefone
+                            </td>
+                            <td align="center">
+                                @dataItem.Contacto.Email
+                            </td>
+                            <td align="center">
+                                @dataItem.Notf_SMS
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div id="teste"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @section Scripts{
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $.ajaxSetup({ cache: false });
+                        $(".btnEditar").click(function () {
+                            var id = $(this).data("value");
+                            $("#teste").load("/Home/EditAPC/" + id,
+                                function () {
+                                    $('#myModal').modal("show");
+                                });
+                        });
+                        $(".btnAddContacto").click(function () {
+                            var id = $(this).data("value");
+                            $("#teste").load("/Home/AddContactoAPC/",
+                                function () {
+                                    $('#myModal').modal("show");
+                                });
+                        });
+                    });
+                </script>
+            }
+        </div>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt" Style="color:#ff2c50">Alterações Gravadas com Sucesso...</p>
+            </div>
+        </div>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt2" Style="color:#ff2c50" hidden></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.getElementById("hidenatt").style.display = "none";
+        </script>
+        <div class="row" Style="margin-top: 0.2cm;">
+            <div class="col-md-1">
+                <a href="#" class="btn btn-danger btnAddContacto">Associar Novo Contacto</a>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+        @Html.Raw(TempData["showmsg"])
+    </form>
+
+</body>
+
+</html>

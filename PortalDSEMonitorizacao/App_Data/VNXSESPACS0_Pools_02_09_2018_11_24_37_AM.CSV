@@ -1,0 +1,3 @@
+﻿Name,FAST Cache,State,RAID Type,Drive Type,Total Capacity (GB),Free Capacity (GB),Allocated (GB),%Consumed,Subscribed (GB),%Subscribed,%Full Threshold,Snapshot Auto Delete,Auto-Tiering Status,Move Up (GB),Move Down (GB),Relocation Time (Hours)
+Pool_SE_BIM01_Block,On,Ready,Mixed,Mixed,91447.009,5600.417,85846.592,93%,"93,429.123",102.168,70,On,Relocating,41.83,42.58,0.08
+Pool_SE_BIM01_File,On,Ready,RAID6,NL SAS,22010.405,2931.464,19078.941,86%,"20,462.388",92.967,83,On,Relocating,0.00,0.00,0.00

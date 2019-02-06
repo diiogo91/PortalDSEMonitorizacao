@@ -1,0 +1,102 @@
+﻿@using System
+@using System.Activities.Expressions
+@using System.IO
+
+@{
+    ViewBag.Title = "Gestão de Contactos";
+
+}
+@Html.Raw(TempData["msg"])
+<script type="text/javascript">
+    //window.location.hash ="/Home/balcoes";
+    window.history.replaceState(null, "Title", "/Home/Contactos");
+</script>
+
+<h2 align="center">Gestão de Contactos</h2>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Gestão de Contactos </title>
+</head>
+<body>
+
+    <form method="POST">
+        <div>
+            <br /><br />
+            <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+                <tr style="background-color:#D1005D">
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Equipa</th>
+                    <th class="text-center">Telefone</th>
+                    <th class="text-center">Email</th>
+                </tr>
+
+                @model PortalDSEMonitorizacao.Models.ContactsListViewModel
+
+                @if (Model.Contactos != null)
+                {
+                    foreach (var dataItem in Model.Contactos)
+                    {
+                        <tr>
+                            <td align="center">
+                                @dataItem.Nome
+                            </td>
+                            <td align="center">
+                                @dataItem.Equipa
+                            </td>
+                            <td align="center">
+                                @dataItem.Telefone
+                            </td>
+                            <td align="center">
+                                @dataItem.Email
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div id="teste"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @section Scripts{
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $.ajaxSetup({ cache: false });
+                        $(".btnEditar").click(function () {
+                            var id = $(this).data("value");
+                            $("#teste").load("/Home/EditContacto/" + id,
+                                function () {
+                                    $('#myModal').modal("show");
+                                });
+                        });
+                        $(".btnAddContacto").click(function () {
+                            var id = $(this).data("value");
+                            $("#teste").load("/Home/AddContacto/",
+                                function () {
+                                    $('#myModal').modal("show");
+                                });
+                        });
+                    });
+                </script>
+            }
+        </div>
+       
+        <script type="text/javascript">
+            document.getElementById("hidenatt").style.display = "none";
+        </script>
+      
+        @Html.Raw(TempData["showmsg"])
+    </form>
+
+</body>
+
+</html>

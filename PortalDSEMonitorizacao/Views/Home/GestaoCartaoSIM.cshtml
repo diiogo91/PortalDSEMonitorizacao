@@ -1,0 +1,243 @@
+﻿@using System
+@using System.Activities.Expressions
+@using System.IO
+
+@{
+    ViewBag.Title = "Gestão de Cartões SIM";
+
+}
+@Html.Raw(TempData["msg"])
+<script type="text/javascript">
+    //window.location.hash ="/Home/balcoes";
+    window.history.replaceState(null, "Title", "/Home/GestaoCartaoSIM");
+</script>
+<script src="@Url.Content("~/Scripts/chosen.jquery.js")" type="text/javascript"></script>
+
+<h2 align="center">Gestão de Cartões SIM</h2>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Gestão de Cartões SIM </title>
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.theme.min.css" />
+    <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+</head>
+<body onload="maketableScroll2();">
+
+    @using (Html.BeginForm("FiltrarCartaoSIM", "Home", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td colspan="2">
+                    @Html.Label("Filtrar por Numero ", new { @class = "control-label" })
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    @Html.TextBox("filtroNumero", "", new { @id = "filtroNumero", @class = "form-control" })
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input type="submit" id="filtrar" class="btn btn-success"
+                           value="Filtrar" formaction="/home/FiltrarCartaoSIM" />
+                </td>
+            </tr>
+        </table>
+    }
+
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" id="hidenbtn" value="Exportar para XLS" class="btn btn-primary" onclick="tableToExcel('editable','Lista de Cartões SIM','ListaCartoes.xls')" disabled />
+            </td>
+        </tr>
+    </table>
+
+    <form method="POST">
+        <div class="scrollingTable">
+            <br /><br />
+            <table class="table table-bordered table-hover" id="editable" style="width: 100%">
+
+                <tr style="background-color:#D1005D">
+                    <th class="text-center">Acção</th>
+                    <th class="text-center">Número</th>
+                    <th class="text-center">Operadora</th>
+                    <th class="text-center">Data Registo</th>
+                    <th class="text-center">Função</th>
+                    <th class="text-center">Sondas</th>
+                </tr>
+
+                @model PortalDSEMonitorizacao.Models.CartoesSIMListViewModel
+
+                @if (Model.CartoesSIM != null)
+                {
+                    foreach (var dataItem in Model.CartoesSIM)
+                    {
+                        <tr class="trcont">
+                            <td id=@dataItem.Id align="center">
+                                @if (Model.temPermissao == true)
+                                {
+                                    <a href="#" class="btn btn-link btnEditar" data-value="@dataItem.Id">Editar</a>
+                                    <a> | </a>
+                                    <a href="#" class="btn btn-link btnClonar" data-value="@dataItem.Id">Clonar</a>
+                                    <a> | </a>
+                                    <input type="submit" id="remover_@dataItem.Id" class="btn btn-link"
+                                           value="Remover" formaction="/home/RemoveCartaoSIM/@dataItem.Id" data-value="@dataItem.Id" />
+                                }
+                                @if (Model.temPermissao == false)
+                                {
+                                    <a href="#" class="btn btn-link btnEditar not-active" data-value="@dataItem.Id">Editar</a>
+                                    <a> | </a>
+                                    <a href="#" class="btn btn-link btnClonar not-active" data-value="@dataItem.Id">Clonar</a>
+                                    <a> | </a>
+                                    <input type="submit" id="remover_@dataItem.Id" class="btn btn-link not-active" value="Remover" formaction="/home/RemoveCartaoSIM/@dataItem.Id" data-value="@dataItem.Id" />
+                                }
+                            </td>
+                            <td align="center">
+                                @dataItem.Numero
+                            </td>
+                            <td align="center">
+                                @dataItem.Operadora
+                            </td>
+                            <td align="center">
+                                @dataItem.DataRegisto.ToString(string.Format("dd/MM/yyyy HH:mm"))
+                            </td>
+                            <td align="center">
+                                @dataItem.Funcao
+                            </td>
+                            @{
+                                String sondas = "";
+                                foreach (var sonda in @dataItem.Sonda)
+                                {
+                                    sondas = sondas + sonda.Dns + "; ";
+                                }
+                                <td align="center">
+                                    @sondas
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </table>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div id="teste"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt" Style="color:#ff2c50">Alterações Gravadas com Sucesso...</p>
+            </div>
+        </div>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt2" Style="color:#ff2c50" hidden></p>
+            </div>
+        </div>
+        <div class="row" Style="margin-top: 1%;">
+            <div class="col-md-8">
+                <p id="hidenatt3" Style="color:#ff2c50" hidden></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.getElementById("hidenatt").style.display = "none";
+        </script>
+        <div class="row" Style="margin-top: 0.2cm;">
+            <div class="col-md-1">
+                @if (Model.temPermissao == true)
+                {
+                    <a href="#" class="btn btn-danger btnAddCartaoSIM">Adicionar Novo Cartão</a>
+                }
+                @if (Model.temPermissao == false)
+                {
+                    <a href="#" class="btn btn-danger" disabled>Adicionar Novo Cartão</a>
+                }
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+
+        @section Scripts{
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $.ajaxSetup({ cache: false });
+                    $(".btnEditar").click(function () {
+                        var id = $(this).data("value");
+                        $("#teste").load("/Home/EditCartaoSIM/" + id,
+                            function () {
+                                $('#myModal').modal("show");
+                            });
+                    });
+                    $(".btnClonar").click(function () {
+                        var id = $(this).data("value");
+                        $("#teste").load("/Home/ClonarCartaoSIM/" + id,
+                            function () {
+                                $('#myModal').modal("show");
+                            });
+                    });
+                    $(".btnAddCartaoSIM").click(function () {
+                        var id = $(this).data("value");
+                        $("#teste").load("/Home/AddCartaoSIM/",
+                            function () {
+                                $('#myModal').modal("show");
+                            });
+                    });
+                });
+                var tableToExcel = (function () {
+                    var uri = 'data:application/vnd.ms-excel;base64,'
+                        , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><?xml version="1.0" encoding="UTF-8" standalone="yes"?><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                    return function (table, name, fileName) {
+                        if (!table.nodeType) table = document.getElementById(table)
+                        var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+
+                        var link = document.createElement("A");
+                        link.href = uri + base64(format(template, ctx));
+                        link.download = fileName || 'Workbook.xls';
+                        link.target = '_blank';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                })();
+            </script>
+        }
+        @Html.Raw(TempData["showmsg"])
+        @Html.Raw(TempData["showmsg2"])
+    </form>
+
+</body>
+
+</html>

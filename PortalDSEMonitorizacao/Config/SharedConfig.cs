@@ -1,4 +1,6 @@
 ﻿using ELFinder.Connector.Config;
+using MongoDB.Bson;
+using System.Web.Mvc;
 
 namespace PortalDSEMonitorizacao.Config
 {
@@ -17,7 +19,6 @@ namespace PortalDSEMonitorizacao.Config
         public static ELFinderConfig ELFinder { get; set; }
 
         #endregion
-
     }
 
 }

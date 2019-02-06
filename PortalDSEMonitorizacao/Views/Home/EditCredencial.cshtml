@@ -1,0 +1,95 @@
+﻿@using System.Collections.Generic
+@using System.Web.Mvc.Html
+@using FormMethod = System.Web.Mvc.FormMethod
+@{
+    ViewBag.Title = "Editar Credencial";
+}
+
+@model PortalDSEMonitorizacao.Models.Credencial
+@using (Html.BeginForm("EditCredencial2", "Home", FormMethod.Post))
+{
+ 
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p align="center">EDITAR DADOS DE: @Model.User</p>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.HiddenFor(model => model.Id, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.HiddenFor(model => model.Id, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.User, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.User, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.User)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Password, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Visibilidade, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @{
+                List<SelectListItem> listItems2 = new List<SelectListItem>();
+                if (Model.Visibilidade == true)
+                {
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Todos Users do Dominio",
+                        Value = "true",
+                        Selected = true
+                    });
+                    listItems2.Add(new SelectListItem
+                    {
+                       Text = "Somente Users do DSE-Monitorização",
+                       Value = "false"
+                    });
+                }
+                else
+                {
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Todos Users do Dominio",
+                        Value = "true"
+                    });
+                    listItems2.Add(new SelectListItem
+                    {
+                        Text = "Somente Users do DSE-Monitorização",
+                        Value = "false",
+                        Selected = true
+                    });
+                }
+                    }
+                    @Html.DropDownListFor(model => model.Visibilidade, listItems2, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Visibilidade)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Descricao, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
+                    @Html.ValidationMessageFor(model => model.Descricao)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <p align="left">(*) Campos Obrigatórios</p>
+        <input type="submit" value="Confirmar" class="btn btn-danger" formaction="/home/EditCredencial2/" />
+        <input type="button" value="Cancelar" class="btn btn-default" data-dismiss="modal" />
+    </div>
+
+}

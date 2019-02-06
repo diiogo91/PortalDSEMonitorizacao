@@ -29,7 +29,7 @@ function maketableScroll2() {
    
     $('table.table').each(function() {
         var currentPage = 0;
-        var numPerPage = 10;
+        var numPerPage = 25;
         var $table = $(this);
         $table.bind('repaginate', function() {
             $table.find('.trcont').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();

@@ -1,0 +1,339 @@
+﻿
+@{
+    ViewBag.Title = "Estatisticas Mobile";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/EstatisticasDisponibilidadeMobile");
+</script>
+@model PortalDSEMonitorizacao.Models.EstatisticaDsiponibilidadeViewModel
+
+<h2>Processar Estatística Disponibilidade Serviços Mobile</h2>
+<html>
+<head>
+    <title>Processamento de Informação Estatistica Disponibilidade de Serviços Mobile</title>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.theme.min.css" />
+</head>
+
+<body>
+    <table>
+        <tr>
+            <td><b> NB:</b> A Estatística é referente a Associação entre os Serviços Mobiles e Operadoras/Entidades. Deve garantir que os Serviços estejam associados as respectivas Operadoras/Entidades.</td>
+        </tr>
+    </table>
+    @using (Html.BeginForm("EstatisticasDisponibilidadeMobile2", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <table>
+            <tr>
+                <td>Especificar datas:</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Inicio:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.TextBox("dataInicio", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Fim:", new { @class = "control-label col-md-3" })
+                </td>
+                <td>
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.TextBox("dataFim", "", new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="Submit" value="Processar Estatísica" class="btn btn-success" onclick="callProgress()" formaction="/home/EstatisticasDisponibilidadeMobile2" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Output:
+                </td>
+            </tr>
+        </table>
+    }
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" id="hidenbtn" value="Exportar para XLS" class="btn btn-primary" onclick="tableToExcel('editable',' Estatistica de Disponibilidade Mobile ','EstatisticaDisp_Mobile.xls')" disabled />
+            </td>
+        </tr>
+    </table>
+    <table id="editable">
+        @if (Model.periodoEspecificado != null)
+        {
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td><b> Período Especificado: @Model.periodoEspecificado</b> </td>
+            </tr>
+        }
+        @if (Model.DisponibilidadeMobileList != null && Model.Associacoes != null && Model.ServicosMobile != null && Model.Provedores != null)
+        {
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td><b> Disponibilidade dos Serviços Mobile:</b> </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+
+    @if (Model.DisponibilidadeMobileList != null && Model.Associacoes != null && Model.ServicosMobile != null && Model.Provedores != null)
+    {
+        <tr>
+            <td>
+                <table class="table table-bordered table-hover"  style="width: 100%">
+                    <tr>
+                        <th class="text-center">Provedor</th>
+                        @foreach (var dataItem in Model.ServicosMobile)
+                        {
+                            <th class="text-center">@dataItem.Nome</th>
+                        }
+                        <th class="text-center" style="background-color:#efefef">MDO</th>
+                    </tr>
+
+                    @foreach (var dataItem in Model.Provedores)
+                    {
+                        <tr>
+                            <th class="text-center" style="background-color:@Model.cores[@dataItem.Nome]">@dataItem.Nome</th>
+                            @foreach (var dataItem2 in Model.ServicosMobile)
+                            {
+                                bool found = false;
+                                foreach (var dataItem3 in Model.DisponibilidadeMobileList)
+                                {
+                                    if (dataItem.Id == dataItem3.Associacao.Provedor.Id && dataItem2.Id == dataItem3.Associacao.ServicoMobile.Id)
+                                    {
+                                        found = true;
+                                        <td align="center"> @dataItem3.DisponibilidadeString </td>
+                                    }
+                                }
+                                if (found == false)
+                                {
+                                    <td align="center"> - </td>
+                                }
+                            }
+                            @foreach (var dataItem2 in Model.MdoList)
+                            {
+                                if (dataItem.Id.ToString() == dataItem2.IDProvedor)
+                                {
+                                    <td align="center" style="background-color:#efefef"> @dataItem2.Disponibilidade </td>
+                                }
+                            }
+                        </tr>
+                    }
+                    <tr>
+                        <th class="text-center" style="background-color:#efefef">MDS</th>
+                        @foreach (var dataItem in Model.ServicosMobile)
+                        {
+                            bool found = false;
+                            foreach (var dataItem2 in Model.MdsList)
+                            {
+                                if (dataItem.Id.ToString() == dataItem2.IDServico)
+                                {
+                                    found = true;
+                                    <td align="center" style="background-color:#efefef"> @dataItem2.Disponibilidade </td>
+                                }
+                            }
+                            if (found == false)
+                            {
+                                <td align="center"> - </td>
+                            }
+                        }
+                        <td align="center"> - </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b> MDS: Média de Disponibilidade por Serviço</b> </td>
+                    </tr>
+                    <tr>
+                        <td><b> MDO: Média de Disponibilidade por Operadora</b> </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @if (Model.IndisponibilidadesList != null)
+                {
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b> Tempos de Indisponibilidade</b> </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b> Tempo Total de Indisponibilidade:</b> @Model.tempoIndsTotal </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                </table>
+
+                <table class="table table-bordered table-hover" id="editable2" style="width: 100%">
+                    <tr>
+                        <th class="text-center">Entidade</th>
+                        <th class="text-center">Serviço</th>
+                        <th class="text-center">Nº Ocorrências</th>
+                        <th class="text-center">Período</th>
+                        <th class="text-center">Datas (nº ocorrências): Descrição</th>
+                    </tr>
+                    @foreach (var dataItem in Model.IndisponibilidadesList)
+                    {
+                        <tr>
+                            <td>
+                                @dataItem.Associacao.Provedor.Nome
+                            </td>
+                            <td>
+                                @dataItem.Associacao.ServicoMobile.Nome
+                            </td>
+                            <td>
+                                @dataItem.NrOcorrencias
+                            </td>
+                            <td>
+                                @dataItem.PeriodoIndisponibilidade
+                            </td>
+                            <td>
+                                @dataItem.Dias
+                            </td>
+                        </tr>
+                    }
+                </table>
+                }
+            </td>
+        </tr>
+    }
+       </table>
+
+    <div class="row" Style="margin-top: 1%;">
+        <div class="col-md-8">
+            <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento da Estatistica. Por Favor, Contacte o Administrador da Página. </p>
+        </div>
+    </div>
+
+    <div class="modal fade" id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+        <p style="position: absolute; top: 30%; left: 40%; right:50%; bottom:50%; color: White;">
+            <img src="~/Content/img/msg-processando.gif">
+        </p>
+    </div>
+
+    @Html.Raw(TempData["showmsg"])
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#dataInicio").datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior'
+            });
+            $("#dataFim").datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior'
+            });
+
+        });
+
+        function callProgress() {
+            $("#divLoading").show();
+        };
+    </script>
+    @section scripts{
+        <script>
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><?xml version="1.0" encoding="UTF-8" standalone="yes"?><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name, fileName) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+
+                    var link = document.createElement("A");
+                    link.href = uri + base64(format(template, ctx));
+                    link.download = fileName || 'Workbook.xls';
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            })();
+        </script>
+    }
+    @Html.Raw(TempData["showmsg"])
+</body>
+</html>
+

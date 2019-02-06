@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "EstatisticasMobile";
+}
+
+<script type="text/javascript">
+    window.history.replaceState(null, "Title", "/Home/EstatisticasMobile");
+</script>
+
+<h2>Processar Ficheiro de Estatísticas Mobile (Mensagens Enviadas)</h2>
+<html>
+<head>
+    <title>Processamento de Informação Estatistica Mobile</title>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+</head>
+<body>
+@model PortalDSEMonitorizacao.Models.ResultadoProcessamento
+@using (Html.BeginForm("EstatisticasMobile2", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table>
+        <tr>
+            <td>Carregar Ficheiro de Estatisticas Mobile:</td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" name="UploadedFile" />
+            </td>
+        </tr>
+        <tr>
+            <td><b>NB:</b> O ficheiro a processar deve estar no formato <b>xls ou xlsx</b></td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                Output:
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Raw("<pre  style = 'width: 800px; height: 400px;'>" + Html.Encode(Model.Output) + "</pre>")
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="Submit" value="Processar Estatísica" class="btn btn-success" />
+            </td>
+        </tr>
+    </table>
+}
+
+<div class="row" Style="margin-top: 1%;">
+    <div class="col-md-8">
+        <p id="hidenatt2" Style="color:#ff2c50" hidden>Formato do ficheiro submetido invalido.. Certifque de que é o ficheiro de Estatísticas Mobile correcto e que esteja no formato xls ou xlsx </p>
+    </div>
+</div>
+<div class="row" Style="margin-top: 1%;">
+    <div class="col-md-8">
+        <p id="hidenatt3" Style="color:#ff2c50" hidden>Ocorreu um erro durante o processamento do ficheiro. Por Favor, Contacte o Administrador da Página. </p>
+    </div>
+</div>
+
+@Html.Raw(TempData["showmsg"])
+</body>
+</html>
